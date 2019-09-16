@@ -1,0 +1,61 @@
+#MySql常用命令
+#创建数据库iibame，字符集为utf8
+create database iibame charset utf8;
+#查看可用字符集
+show charset;
+#查看可用校对规则
+show collation;
+#查看数据库创建信息
+show create database iibame;
+#删除数据库
+drop database iibame;
+#修改数据库，只是修改字符编码或者校对规则
+alter database iibame charset gbk;
+#使用某个数据库
+use iibame;
+#创建表
+create table 表名 (字段1, 字段2) [charset=字符集] [engine=表类型];
+charset: utf8,gbk,gb2312,big5默认是数据库字符集
+engine: InnoDB, MyIsam, BDB 默认是InnoDB
+auto_increment:用于整数类型，能让该字段按顺序“自动增长”
+primary key :主键，用于表示（限定）该字段的值不能重复，并且作为主要关键字
+create table iib_2019 (id  int, name varchar(10), sex char(1) , age int);
+#查看所有数据表
+show tables;
+#查看表结构
+desc iib_2019;
+#查看表的创建语句
+show create table iib_2019;
+#删除数据表
+drop table iib_2019;
+#添加字段
+alter table 表名 add 字段名 字段类型 [字段属性] [after 某字段名或first]
+alter table iib_2019 add salary float after age;
+#修改字段
+alter table 表名 change 旧字段名 新字段名 字段类型 [字段属性];
+alter table iib_2019 change age  new_age int(10) default 10;
+#修改字段其他信息
+alter table 表名 modify 要修改的字段名 字段类型 [字段属性];
+alter table iib_2019 modify new_age int(20) default 20 after edu;
+#删除字段
+alter table iib_2019 drop salary;
+#修改表名
+alter table iib_2019 rename iib_201909;
+#修改字符集
+alter table iib_201909 charset=gb2312;
+#插入数据
+insert into 表名(字段1,字段2) values (数据1， 数据2);
+insert into iib_2019 (id , name , sex) values (1 , 'kiki', 20);
+#查询数据
+select 字段名  from 表名 where 条件;
+select name from iib_2019 where age > 20;
+#删除数据
+delete from 表名 [where 条件];
+delete from iib_2019 where age > 18;
+#修改数据
+update 表名 set 字段1 = 新值1 , 字段2 = 新值2，... [where 条件]
+update iib_2019 set name = 'king' ,age = '28' where id = 1;
+
+
+
+

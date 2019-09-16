@@ -1,0 +1,128 @@
+#select 查询顺序
+select from where
+group by
+having
+order by
+limit
+#select 查询固定数据
+select 1;
+select 'abc';
+select now();
+#select 进行计算
+select 1 + 2
+select 3+4*5, 6+round(6.7);
+#使用别名
+select 1 as d1, 2+3 as d2;
+select user_name as un, user_pass as pwd from users;
+#使用distinct 消除查询结果重复行
+select distinct 字段1， 字段2 from 表名;
+#where子句
+select * from 表名 where 查询条件;
+#比较运算符
+where id > 10;
+#算术运算符，比较运算符
+where age - 18 >=0;
+#比较运算符，逻辑运算符
+where id < 20 and age >= 18;
+#算术运算符，比较运算符，逻辑运算符
+where year % 4 =0 and year % 100 !=0 || year % 400 = 0
+#limit在翻页上的应用
+limit (n-1)*pageSize , pagesize;  其中pagesize表示每页显示的条数
+#同时插入多条记录
+insert into table(字段1,字段2)  values(值1, 值2), (值1, 值2);
+#插入查询的结果数据
+insert into 表名 （字段1, 字段2） select  字段1, 字段2 from ;
+#插入的字段个数与字段类型与select的字段个数类型相等
+#set 语法插入
+insert into 表名 set 字段1='1' ,字段2  = '2';
+#蠕虫复制：针对一个表的数据进行快速的复制并插入到所需要的表中
+#插入存在主键冲突
+a.忽略---终止插入，数据不改变，语句不报错
+insert ignore into 表名 (字段) values (值);
+b. 替换
+replace into 表名 (字段...) values (值...);
+c.更新
+insert into 表名 (字段...) values (值) on duplicate key update xx字段 = 值;
+#指定顺序删除指定数量的数据
+delete from 表名 where [order by 字段名...] [limit 数量n]；
+1.order by 用于设定删除数据时的删除顺序，与select语句中的order by一致
+2.limit 用于设定删除数据时要删除的行数，即删除的数据少于条件筛选出来的数据
+#truncate 清空 表示清空表中的所有数据将表恢复到初始状态，类似刚创建的一样
+truncate 表名
+与delete from 表名相比，delete删除之后表的记录仍是已使用过(auto_increment)
+#高级更新
+update 表名 set 字段名 = 值1, ... where ... [order by 字段名] [limit n];
+1.order by用于设定更新数据时的更新顺序，跟select 语句中的order by字句道理一样
+2.limit用于设定更新数据时更新的行数，即更新的数据量可能少于筛选出来的数据量
+#联合查询:是指将2个或2个以上的字段数量相同的查询结果，'纵向堆叠'一个合并结果
+select id1, a1, a2 from join1 
+union [all或者distinct] 
+select id2, b1, b2 from join2;
+union [all或者distinct]
+select id3, c1, c3 from join3
+...
+[order by 字段 [asc或desc]]
+[limit 起始行号, 数量]; 
+#说明
+1.所有单个查询结果应该具有相等的列数。
+2.所有单个查询的列类型应该具有一致性（即每个查询的第n列的数据类型一致）
+3.单个查询的列名可以不同，但最终的列名是第一个查询的列名(可以使用别名)
+4.union可以带all或distinct参数，如果省略就是distinct，即默认消除重复行
+5.最后的order by或limit是对整个联合之后的数据进行排序或数量限定
+6.order by子句中的排序字段应该使用第一个查询中的字段名，如果有别名就必须使用别名
+7.可见，假设:
+查询1有n1行，m列
+查询2有n2行，m列
+则两个表‘联合’之后的结果，有最多n1+n2行，m列
+#连接查询：将两个查询结果以'横向对接'的方式合并起来的结果
+可见，假设：
+表1有n1行，m1列
+表2有n2行，m2列
+则表1和表2‘连接’之后，就会有：
+n1*n2行
+m1 + m2列
+#连接查询基本形式：
+select ... from 表1 [连接方式] join 表2 [on连接条件] where ...;
+#连接查询只是作为from子句的"数据源"或者说连接查询是扩大了数据源，从原来一个表作为数据源
+扩大成多个表做数据源
+连接查询包括：
+#交叉连接(cross join)
+语法形式：from 表1 [cross] join 表2
+说明：
+1.交叉连接其实可以认为连接查询的完全版本，即所有行都无条件的连接起来
+2.关键字ccross可以省略
+3.交叉连接称为笛卡尔积，通常应用价值不大
+4.交叉连接还有一种写法：from 表1， 表2
+#内连接
+from 表1 [inner] join 表2 on 连接条件
+说明：
+1.内连接其实在交叉连接的基础上，再通过on条件而筛选出来的部分数据
+2.关键字inner可以省略，但建议写上
+3.内连接是应用最广泛的一种连接查询，其本质是根据条件筛选出有意义的数据
+
+#左外连接（left join）
+from 表1 left [outer] join biao2 on 连接条件
+1.左外连接其实是保证左边表的数据都能取出来的一种连接。
+2.左外连接其实是在内连接的基础上，再加左边表中所有不能满足条件的数据
+3.关键字outer可以省略
+#右外连接（right join）
+from 表1 right [outer] join 表2 on 连接条件
+1.右外连接其实是保证右边表的数据都能够取出的一种连接
+2.右外连接其实是在内连接的基础上，再加上右边表所有不能满足条件的数据
+3.关键字outer可以省略
+#子查询
+select * from 表名 where price >=(一个子查询语句);
+#any关键字
+any关键字用在比较操作符的后面，表示查询结果的多个数据中的任意一个满足该比较操作符就算满足
+#all关键字
+all关键字用在比较操作符的后面表示查询结果的多个数据中的所有都满足该比较操作符才算满足
+#exists子查询
+形式：where exists(任何子查询)
+含义：
+	该子查询如果‘有数据’，则该exists()的结果为‘true’,即相当于where true 恒真
+	该子查询如果‘没有数据’，则该exists()的结果为‘false’,即相当于where false 恒假
+	
+
+
+
+
